@@ -8,20 +8,29 @@ function AddTransaction(){
     const [description, setDescription] = useState("");
     const [date, setDate] = useState("");
     
+
     function handleAddTransaction(e){
+
+        console.log(type, amount, category, description, date);
+
         if (!amount || !category || !date){
             return alert("Please fill all the details");
         }
-        console.log(type, amount, category, description, date);
-        
-        const newTransaction = {
+
+        const existingTransactions = JSON.parse(localStorage.getItem("transactions")) || []; //If the transaction is not yet created, the empty array will run and when the new transaction(object) is created, then the new object will store in the array.
+
+        const currentTransaction = {
             type: type,
             amount:parseFloat(amount),
             category,
             description,
             date
-
         }
+
+        const newTransaction = [...existingTransactions, currentTransaction];
+        console.log(existingTransactions);
+        
+        console.log(newTransaction);
         localStorage.setItem("transactions", JSON.stringify(newTransaction));
         alert("Transaction added Successfully");
         setCategory("");
