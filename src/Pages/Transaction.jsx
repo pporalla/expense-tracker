@@ -13,6 +13,7 @@ function Transaction(){
         "Entertainment":" 🎬 ",
         "Others":"🧾"
     };
+    
     console.log(categoryEmojies["Salary"]);
 
     existingTransaction.map((data, i)=>{
