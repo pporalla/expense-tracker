@@ -38,10 +38,10 @@ function Dashboard(){
             </div>
             <TransactionCards balance = { balance } income = {totalIncome} expense = {totalExpense} />
 
-            <div className = "transaction-chart-row">
-                <div className = "transaction-half-width">
+            <div className = "transactions-chart-row">
+                <div className = "transactions">
                     <h3>Recent Transactions</h3>
-                    <RecentTransactions transactions = {transactions}/>
+                    <RecentTransactions transactions = {transactions} />
                 </div>
             </div>
         </div>

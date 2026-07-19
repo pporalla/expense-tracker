@@ -17,7 +17,7 @@ function RecentTransactions({ transactions }) {
                 {transactions.slice(-8).reverse().map((tx, index) => (
                     <li key={index} className="transaction-item">
                         <span className="transaction-category">
-                            {categoryEmojis[tx.category]} {tx.category}
+                            {categoryEmojies[tx.category]} {tx.category}
                         </span>
                         <span className={`transaction-amount ${
                             tx.type === "Income" ? "income" : "expense"
