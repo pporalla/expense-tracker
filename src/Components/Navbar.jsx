@@ -5,7 +5,7 @@ import "../styles/Navbar.css";
 function Navbar() {
     const location = useLocation();
     const [quote, setQuote] = useState("");
-    const [isModelOpen, setIsModelOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [author, setAuthor] = useState("");
 
     const fetchQuote = async () => {
@@ -21,7 +21,7 @@ function Navbar() {
 
             setQuote(randomQuote.phrase);
             setAuthor(randomQuote.author);
-            setIsModelOpen(true);
+            setIsModalOpen(true);
 
         }
         catch (error) {
@@ -53,15 +53,14 @@ function Navbar() {
                 </li>
             </ul>
 
-            {isModelOpen && (
+            {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <p>{quote}</p>
                         <h4>- {author}</h4>
-
                         <button
                             className="cls-btn"
-                            onClick={() => setIsModelOpen(false)}
+                            onClick={() => setIsModalOpen(false)}
                         >
                             Close
                         </button>

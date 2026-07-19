@@ -1,13 +1,17 @@
 import React from 'react';
 import '../styles/AddTransaction.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 function AddTransaction(){
     const [type, setType] = useState("Expense");
     const [amount, setAmount] = useState(0);
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState("");
-    
+    const [transaction, setTransaction] = useState([]);
+    const [editIndex, setEditIndex] = useState(null);
+
+    const location = useLocation();
 
     function handleAddTransaction(e){
 
@@ -17,8 +21,6 @@ function AddTransaction(){
             return alert("Please fill all the details");
         }
 
-        const existingTransactions = JSON.parse(localStorage.getItem("transactions")) || []; //If the transaction is not yet created, the empty array will run and when the new transaction(object) is created, then the new object will store in the array.
-
         const currentTransaction = {
             type: type,
             amount:parseFloat(amount),
@@ -26,21 +28,52 @@ function AddTransaction(){
             description,
             date
         }
+        let newTransactions;
+        if (editIndex == null){
+            newTransactions = [...transaction, currentTransaction];
+        }
+        else{
+            newTransactions=[...transaction];
+            newTransactions[editIndex] = currentTransaction;
+        }
 
-        const newTransaction = [...existingTransactions, currentTransaction];
-        console.log(existingTransactions);
+
         
-        console.log(newTransaction);
-        localStorage.setItem("transactions", JSON.stringify(newTransaction));
-        alert("Transaction added Successfully");
+        console.log(transaction);
+        
+        console.log(newTransactions);
+        localStorage.setItem("transactions", JSON.stringify(newTransactions));
+        if (editIndex !== null){
+            alert(`${type} updated successfully`)
+        }
+        else{
+            alert(`${type} added Successfully`);
+        }
+        
         setCategory("");
         setDescription("")
         setDate("");
-
-
-
+        setType("Expense");
+        setAmount("");
+        setEditIndex(null);
     }
 
+    useEffect( () => {
+        const existingTransactions = JSON.parse(localStorage.getItem("transactions")) || []; //If the transaction is not yet created, the empty array will run and when the new transaction(object) is created, then the new object will store in the array.
+        setTransaction(existingTransactions);
+
+        console.log(location.state);
+        if (location.state && location.state.transaction){
+            const transaction = location.state.transaction;
+            setType(transaction.type);
+            setAmount(transaction.amount);
+            setCategory(transaction.category);
+            setDescription(transaction.description);
+            setDate(transaction.date);
+            setEditIndex(transaction.index);
+        }
+
+    }, [location]);
 
     return(
         <div className="add-transaction-container">
@@ -55,7 +88,7 @@ function AddTransaction(){
                     </label>
                 </div>
                 <input type="number" value = {amount} placeholder = 'Amount (Rs.)' onChange={ (e) => setAmount(e.target.value) }/>
-                <select onChange={ (e) => setCategory(e.target.value) }>
+                <select value={category} onChange={ (e) => setCategory(e.target.value) }>
                     <option value="">Select a category</option>
                     <option value="Salary">Salary</option>
                     <option value="Groceries">Groceries</option>
@@ -64,12 +97,12 @@ function AddTransaction(){
                     <option value="Entertainment">Entertainment</option>
                     <option value="Others">Others</option>
                 </select>
-                <textarea  placeholder="Description" onChange={ (e) => setDescription(e.target.value) }></textarea>
-                <input type="date" onChange={ (e) => setDate(e.target.value) } />
-                <button onClick={ handleAddTransaction }>Add Transaction</button>
+                <textarea value={description} placeholder="Description" onChange={ (e) => setDescription(e.target.value) }></textarea>
+                <input type="date" value={date} onChange={ (e) => setDate(e.target.value) } />
+                <button onClick={ handleAddTransaction }>{editIndex==null?'Add Transaction':'Update Transaction'}</button>
             </div>
         </div>
-    )
+    );
 }
 
 export default AddTransaction;
